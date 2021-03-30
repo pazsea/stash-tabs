@@ -10,7 +10,7 @@ export function activate(context: vscode.ExtensionContext) {
     vscode.StatusBarAlignment.Right
   );
   item.text = "$(archive) Stashed tabs";
-  item.command = "stashtabs.add";
+  item.command = "stash-tabs.add";
   item.show();
 
   context.subscriptions.push(

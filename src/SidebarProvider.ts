@@ -21,19 +21,14 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
 
     webviewView.webview.onDidReceiveMessage(async (data) => {
       const { tabPaths, name, isOpen } = data.value;
-      console.log(
-        "🚀 ~ file: SidebarProvider.ts ~ line 25 ~ SidebarProvider ~ webviewView.webview.onDidReceiveMessage ~ tabPaths",
-        tabPaths
-      );
       switch (data.type) {
         case "onOpenTabs": {
-          console.log("HEEEJ");
-          // if (!data.value || !tabPaths) {
-          // return;
-          // }
-          // tabPaths.forEach(path => {
-          //   vscode.commands.executeCommand("vscode.open", path);
-          // });
+          if (!data.value || !tabPaths) {
+            return;
+          }
+          tabPaths.forEach(path => {
+            vscode.commands.executeCommand("vscode.open", path);
+          });
           break;
         }
         case "onError": {
