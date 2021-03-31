@@ -32,8 +32,10 @@ export function activate(context: vscode.ExtensionContext) {
       const input = await vscode.window.showInputBox();
 
       const paths = vscode.workspace.textDocuments.map(
-        (element) => element.uri.path
+        (doc) => doc
       );
+
+      console.log("text", paths);
 
       if (!paths || !input) {
         return;
