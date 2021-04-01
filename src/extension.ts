@@ -35,7 +35,7 @@ export function activate(context: vscode.ExtensionContext) {
         (doc) => doc
       );
 
-      console.log("text", paths);
+      // console.log("text", paths);
 
       if (!paths || !input) {
         return;

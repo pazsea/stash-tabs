@@ -9,10 +9,13 @@
 
   let state: IStashedItem[] = [];
   let alwaysPop = false;
-  let text = "";
+  // let text = "";
 
   onMount(() => {
     const storedStashItems = localStorage.getItem(storageKey);
+    if (storedStashItems) {
+      state = JSON.parse(storedStashItems);
+    }
     window.addEventListener("message", (event) => {
       const stash = event.data; // The json data that the extension sent
       const { name, tabPaths }: IStashedItem = stash.value;
@@ -23,31 +26,39 @@
           break;
       }
     });
-    if (storedStashItems) {
-      state = JSON.parse(storedStashItems);
-    }
   });
 
-  // const clear = () => {
-  //   state = [];
-  //   if (localStorage.getItem(storageKey)) localStorage.removeItem(storageKey);
-  // }
+  const removeStashedItem = (e: MouseEvent, index: number) => {
+    e.stopPropagation();
+    state = state.splice(index, index);
+    console.log(
+      "🚀 ~ file: Sidebar.svelte ~ line 39 ~ removeStashedItem ~ state",
+      state
+    );
+    if (!state) return localStorage.removeItem(storageKey);
+    localStorage.setItem(storageKey, JSON.stringify(state));
+  };
+
+  //TODO: Add verify input later
+  const clear = () => {
+    state = [];
+    if (localStorage.getItem(storageKey)) localStorage.removeItem(storageKey);
+  };
 
   const storeStashedItem = (state: IStashedItem[]) => {
     localStorage.setItem(storageKey, JSON.stringify(state));
   };
 
   const handleClick = (item: IStashedItem) => {
-    console.log(
-      "🚀 ~ file: Sidebar.svelte ~ line 30 ~ handleClick ~ item",
-      item
-    );
+    console.log("HERE");
     if (!item || !item.tabPaths) return;
     tsvscode.postMessage({ type: "onOpenTabs", value: item });
   };
 </script>
 
-<form
+<!-- 
+  TODO: Have input for open tabs
+  <form
   on:submit|preventDefault={(e) => {
     if (!text) return;
     state = [{ name: text, tabPaths: [] }, ...state];
@@ -55,16 +66,21 @@
   }}
 >
   <input type="text" bind:value={text} />
-</form>
+</form> -->
 
 <ul>
-  {#each state as item (item.name)}
-    <li class:stashedItem={true} on:click={() => handleClick(item)}>
-      <div class:stashedItem_container={true}>
+  {#each state as item, index (index)}
+    <li class="stashedItem" on:click={() => handleClick(item)}>
+      <div class="stashedItem_container">
         <div>
           {item.name}
         </div>
-        <div>X</div>
+        <div
+          class="deleteContainer"
+          on:click={(e) => removeStashedItem(e, index)}
+        >
+          X
+        </div>
       </div>
     </li>
   {/each}
@@ -79,10 +95,7 @@
   Always pop stashes
 </button>
 
-<!-- <button
-    on:click={() => {
-        tsvscode.addTabs({ type: 'add' });
-    }}>Stash open tabs</button> -->
+<button on:click={clear}>Clear</button>
 
 <!-- <button
     on:click={() => {
@@ -95,23 +108,31 @@
     padding: 0;
   }
 
+  .deleteContainer {
+    width: fit-content;
+    cursor: pointer;
+    padding: 2px;
+  }
+  .deleteContainer:hover {
+    color: red;
+  }
   .stashedItem {
     padding: 5px 10px;
     margin: 5px 0;
     border: 1px solid lightslategray;
-    background-color: #D9DBF1;
+    background-color: #d9dbf1;
     color: black;
   }
   .stashedItem_container {
-      display: flex;
-      flex-direction: row;
-      justify-content: space-between;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
   }
 
   .stashedItem:hover {
     border: 1px solid lightblue;
     color: white;
-    background: #0C7C59;
+    background: #0c7c59;
   }
   .alwaysPop {
     background-color: green;
