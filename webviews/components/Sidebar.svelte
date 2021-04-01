@@ -5,30 +5,40 @@
     name: string;
     tabPaths: string[];
   }
+  const storageKey = "stashedItems";
 
   let state: IStashedItem[] = [];
   let alwaysPop = false;
   let text = "";
 
   onMount(() => {
+    const storedStashItems = localStorage.getItem(storageKey);
     window.addEventListener("message", (event) => {
       const stash = event.data; // The json data that the extension sent
       const { name, tabPaths }: IStashedItem = stash.value;
-      // if (state.find((item) => item.name === name)) return;
       switch (stash.type) {
         case "add-stash":
           state = [
             { name: name, tabPaths: tabPaths },
             ...state,
           ];
+          storeStashedItem(state);
           break;
       }
     });
+    if (storedStashItems) {
+      state = JSON.parse(storedStashItems);
+    }
   });
 
-  function handleClick(item: IStashedItem) {
+  const storeStashedItem = (state: IStashedItem[]) => {
+    localStorage.setItem(storageKey, JSON.stringify(state));
+  }
+
+  const handleClick = (item: IStashedItem) => {
+  console.log("🚀 ~ file: Sidebar.svelte ~ line 30 ~ handleClick ~ item", item)
     if (!item || !item.tabPaths) return;
-    () => tsvscode.postMessage({ type: "onOpenTabs", value: item });
+    tsvscode.postMessage({ type: "onOpenTabs", value: item });
   }
 
   // onMount(() => {
