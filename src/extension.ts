@@ -42,7 +42,6 @@ export function activate(context: vscode.ExtensionContext) {
       } 
 
       const value = {
-        isOpen: false,
         name: input,
         tabPaths: paths
       };

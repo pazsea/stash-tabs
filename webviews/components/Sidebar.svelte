@@ -3,7 +3,6 @@
 
   interface IStashedItem {
     name: string;
-    isOpen: boolean;
     tabPaths: string[];
   }
 
@@ -14,12 +13,12 @@
   onMount(() => {
     window.addEventListener("message", (event) => {
       const stash = event.data; // The json data that the extension sent
-      const { name, tabPaths, isOpen }: IStashedItem = stash.value;
+      const { name, tabPaths }: IStashedItem = stash.value;
       // if (state.find((item) => item.name === name)) return;
       switch (stash.type) {
         case "add-stash":
           state = [
-            { name: name, tabPaths: tabPaths, isOpen: isOpen },
+            { name: name, tabPaths: tabPaths },
             ...state,
           ];
           break;
@@ -27,11 +26,10 @@
     });
   });
 
-  // function handleClick(item: IStashedItem) {
-  // console.log("🚀 ~ file: Sidebar.svelte ~ line 31 ~ handleClick ~ item", item)
-  // 	if (!item || !item.tabPaths) return;
-  //     () => tsvscode.openTabs({ type: 'onOpenTabs', value: item  });
-  // }
+  function handleClick(item: IStashedItem) {
+    if (!item || !item.tabPaths) return;
+    () => tsvscode.postMessage({ type: "onOpenTabs", value: item });
+  }
 
   // onMount(() => {
   //     window.addEventListener("stash", (event) => {
@@ -51,7 +49,7 @@
 <form
   on:submit|preventDefault={(e) => {
     if (!text) return;
-    state = [{ name: text, tabPaths: [], isOpen: false }, ...state];
+    state = [{ name: text, tabPaths: [] }, ...state];
     text = "";
   }}
 >
@@ -61,9 +59,7 @@
 <ul>
   {#each state as item (item.name)}
     <li
-      on:click={() => {
-        tsvscode.postMessage({ type: "onOpenTabs", value: item });
-      }}
+      on:click={() => handleClick(item)}
     >
       {item.name}
     </li>
@@ -88,7 +84,6 @@
     on:click={() => {
         tsvscode.addTabs({ type: 'onError', value: 'ERROR MESSAGE' });
     }}>Click me for error</button> -->
-
 <style>
   .alwaysPop {
     background-color: green;

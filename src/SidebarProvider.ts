@@ -20,7 +20,7 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
     webviewView.webview.html = this._getHtmlForWebview(webviewView.webview);
 
     webviewView.webview.onDidReceiveMessage(async (data) => {
-      const { tabPaths, name, isOpen } = data.value;
+      const { tabPaths, name } = data.value;
       switch (data.type) {
         case "onOpenTabs": {
           if (!data.value || !tabPaths) {
