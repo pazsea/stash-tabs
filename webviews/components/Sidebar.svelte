@@ -12,35 +12,32 @@
     tabPaths: string[];
   }
   const storageKey = "stashedItems";
+  const popStashKey = "popState";
 
-  let state: IStashedItem[] = [];
-  let alwaysPop = false;
-  // let text = "";
+  let state: IStashedItem[] = localStorage.getItem(storageKey) ? JSON.parse(localStorage.getItem(storageKey) as string) : [];
+  let popState = localStorage.getItem(popStashKey) ? Number(JSON.parse(localStorage.getItem(popStashKey) as string)) : 0;
+  $: storePopState(popState);
+
 
   onMount(() => {
-    const storedStashItems = localStorage.getItem(storageKey);
-    if (storedStashItems) {
-      state = JSON.parse(storedStashItems);
-    }
     window.addEventListener("message", (event) => {
       const stash = event.data; // The json data that the extension sent
       const { name, tabPaths }: IStashedItem = stash.value;
       switch (stash.type) {
         case "add-stash":
-          state = [{ name: name, tabPaths: tabPaths, id: uniqueID() }, ...state];
+          state = [
+            { name: name, tabPaths: tabPaths, id: uniqueID() },
+            ...state,
+          ];
           storeStashedItem(state);
           break;
       }
     });
   });
 
-  const removeStashedItem = (e: MouseEvent, item: IStashedItem) => {
-    e.stopPropagation();
-    state = state.filter(i => i.id !== item.id)
-    console.log(
-      "🚀 ~ file: Sidebar.svelte ~ line 39 ~ removeStashedItem ~ state",
-      state
-    );
+  const removeStashedItem = (item: IStashedItem, e?: MouseEvent) => {
+    if (e) e.stopPropagation();
+    state = state.filter((i) => i.id !== item.id);
     if (!state) return localStorage.removeItem(storageKey);
     localStorage.setItem(storageKey, JSON.stringify(state));
   };
@@ -61,15 +58,20 @@
   const clear = () => {
     state = [];
     if (localStorage.getItem(storageKey)) localStorage.removeItem(storageKey);
+    if (localStorage.getItem(popStashKey)) localStorage.removeItem(popStashKey);
   };
 
   const storeStashedItem = (state: IStashedItem[]) => {
     localStorage.setItem(storageKey, JSON.stringify(state));
   };
 
+  const storePopState = (key: number) => {
+    localStorage.setItem(popStashKey, JSON.stringify(key));
+  };
+
   const handleClick = (item: IStashedItem) => {
-    console.log("HERE");
     if (!item || !item.tabPaths) return;
+    if (popState === 1) removeStashedItem(item);
     tsvscode.postMessage({ type: "onOpenTabs", value: item });
   };
 </script>
@@ -86,6 +88,30 @@
   <input type="text" bind:value={text} />
 </form> -->
 
+<h3 class="title">Always pop stash?</h3>
+<div class="radioContainer">
+  <div>
+    <input
+      type="radio"
+      bind:group={popState}
+      value={1}
+      on:click={() => popState = 1}
+      class="radioContainer_button"
+    /><slot>Yes</slot>
+  </div>
+  <div>
+    <input
+      type="radio"
+      bind:group={popState}
+      value={0}
+      on:click={() => popState = 0}
+      class="radioContainer_button"
+    />
+    <slot>No</slot>
+  </div>
+</div>
+
+<h3 class="title">Stashed items:</h3>
 <ul>
   {#each state as item, index (index)}
     <li class="stashedItem" on:click={() => handleClick(item)}>
@@ -95,23 +121,16 @@
         </div>
         <div
           class="deleteContainer"
-          on:click={(e) => removeStashedItem(e, item)}
+          on:click={(e) => removeStashedItem(item, e)}
         >
           X
         </div>
       </div>
     </li>
+  {:else}
+    <p class={"status"}>No stashed tab groups..</p>
   {/each}
 </ul>
-
-<button
-  class:alwaysPop
-  on:click={() => {
-    alwaysPop = !alwaysPop;
-  }}
->
-  Always pop stashes
-</button>
 
 <button on:click={clear}>Clear</button>
 
@@ -124,6 +143,27 @@
     list-style: none;
     margin: 0;
     padding: 0;
+  }
+
+  .title {
+    font-weight: bold;
+    text-align: center;
+  }
+
+  .status {
+    text-align: center;
+    font-style: italic;
+    padding: 10px 0;
+  }
+
+  .radioContainer {
+    display: flex;
+    justify-content: space-evenly;
+    margin-bottom: 10px;
+  }
+
+  .radioContainer_button {
+    width: fit-content;
   }
 
   .deleteContainer {
@@ -151,8 +191,5 @@
     border: 1px solid lightblue;
     color: white;
     background: #0c7c59;
-  }
-  .alwaysPop {
-    background-color: green;
   }
 </style>
