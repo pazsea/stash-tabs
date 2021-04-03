@@ -1,7 +1,13 @@
 <script lang="ts">
+  //   Todo:
+  // 1. Fixa id på alla stashade tabs så att den tar bort rätt stashat tabs
+  // 2. Always pop stash ska vara en radio button?
+  // 3. Pop stash ska funka
+  // 4. Öppna rätt filer !!
   import { onMount } from "svelte";
 
   interface IStashedItem {
+    id: string;
     name: string;
     tabPaths: string[];
   }
@@ -21,22 +27,34 @@
       const { name, tabPaths }: IStashedItem = stash.value;
       switch (stash.type) {
         case "add-stash":
-          state = [{ name: name, tabPaths: tabPaths }, ...state];
+          state = [{ name: name, tabPaths: tabPaths, id: uniqueID() }, ...state];
           storeStashedItem(state);
           break;
       }
     });
   });
 
-  const removeStashedItem = (e: MouseEvent, index: number) => {
+  const removeStashedItem = (e: MouseEvent, item: IStashedItem) => {
     e.stopPropagation();
-    state = state.splice(index, index);
+    state = state.filter(i => i.id !== item.id)
     console.log(
       "🚀 ~ file: Sidebar.svelte ~ line 39 ~ removeStashedItem ~ state",
       state
     );
     if (!state) return localStorage.removeItem(storageKey);
     localStorage.setItem(storageKey, JSON.stringify(state));
+  };
+
+  // TODO: Replace with real uuid when launch.
+  const uniqueID = () => {
+    return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(
+      /[xy]/g,
+      function (c) {
+        var r = (Math.random() * 16) | 0,
+          v = c == "x" ? r : (r & 0x3) | 0x8;
+        return v.toString(16);
+      }
+    );
   };
 
   //TODO: Add verify input later
@@ -77,7 +95,7 @@
         </div>
         <div
           class="deleteContainer"
-          on:click={(e) => removeStashedItem(e, index)}
+          on:click={(e) => removeStashedItem(e, item)}
         >
           X
         </div>
