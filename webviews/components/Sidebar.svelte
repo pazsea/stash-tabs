@@ -3,6 +3,8 @@
   // 1. Fixa id på alla stashade tabs så att den tar bort rätt stashat tabs
   // 2. Always pop stash ska vara en radio button?
   // 3. Pop stash ska funka
+  // 4. När man stashar open tabs så ska det sparars i webviewen eller byta till webviewn och spara
+  // 4. Skapa en knapp i fältet som stashar open tabs. 
   // 4. Öppna rätt filer !!
   import { onMount } from "svelte";
 

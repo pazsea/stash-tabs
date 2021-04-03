@@ -27,7 +27,7 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
             return;
           }
           tabPaths.forEach((doc: vscode.TextDocument) => {
-           vscode.window.showTextDocument(doc);
+            return vscode.window.showTextDocument(doc, {preview: false});
           });
           break;
         }
