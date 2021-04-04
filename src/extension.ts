@@ -40,12 +40,13 @@ export function activate(context: vscode.ExtensionContext) {
       if (!paths || !input) {
         return;
       } 
-
+      
       const value = {
         name: input,
         tabPaths: paths
       };
-
+      
+      sidebarProvider._view?.show();
       sidebarProvider._view?.webview.postMessage({
         type: "add-stash",
         value: value,
