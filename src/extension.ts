@@ -29,20 +29,19 @@ export function activate(context: vscode.ExtensionContext) {
         return;
       }
 
-      const input = await vscode.window.showInputBox();
+      const nameInput = await vscode.window.showInputBox();
+      const closeQuestion = await vscode.window.showInformationMessage("Want to close tabs after stashing?", "Yes", "No");
 
       const paths = vscode.workspace.textDocuments.map(
         (doc) => doc
       );
 
-      // console.log("text", paths);
-
-      if (!paths || !input) {
+      if (!paths || !nameInput) {
         return;
       } 
       
       const value = {
-        name: input,
+        name: nameInput,
         tabPaths: paths
       };
       
@@ -51,6 +50,11 @@ export function activate(context: vscode.ExtensionContext) {
         type: "add-stash",
         value: value,
       });
+
+      if (closeQuestion === "Yes") {
+        vscode.commands.executeCommand("openEditors.closeAll")
+      }
+      
 
       // const text = activeTextEditor.document.getText(
       //   activeTextEditor.selection
