@@ -9,7 +9,7 @@ export function activate(context: vscode.ExtensionContext) {
   const item = vscode.window.createStatusBarItem(
     vscode.StatusBarAlignment.Right
   );
-  item.text = "$(archive) Stashed tabs";
+  item.text = "Stash tabs";
   item.command = "stash-tabs.add";
   item.show();
 
