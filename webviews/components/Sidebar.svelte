@@ -9,10 +9,14 @@
   const storageKey = "stashedItems";
   const popStashKey = "popState";
 
-  let state: IStashedItem[] = localStorage.getItem(storageKey) ? JSON.parse(localStorage.getItem(storageKey) as string) : [];
-  let popState = localStorage.getItem(popStashKey) ? Number(JSON.parse(localStorage.getItem(popStashKey) as string)) : 0;
+  let state: IStashedItem[] = localStorage.getItem(storageKey)
+    ? JSON.parse(localStorage.getItem(storageKey) as string)
+    : [];
+  let popState = localStorage.getItem(popStashKey)
+    ? Number(JSON.parse(localStorage.getItem(popStashKey) as string))
+    : 0;
+  let confirmDelete = false;
   $: storePopState(popState);
-
 
   onMount(() => {
     window.addEventListener("message", (event) => {
@@ -49,11 +53,16 @@
     );
   };
 
-  //TODO: Add verify input later
-  const clear = () => {
-    state = [];
-    if (localStorage.getItem(storageKey)) localStorage.removeItem(storageKey);
-    if (localStorage.getItem(popStashKey)) localStorage.removeItem(popStashKey);
+  const toggleConfirmOrDelete = () => {
+    if (!confirmDelete) {
+      confirmDelete = true;
+    } else {
+      state = [];
+      if (localStorage.getItem(storageKey)) localStorage.removeItem(storageKey);
+      if (localStorage.getItem(popStashKey))
+        localStorage.removeItem(popStashKey);
+      confirmDelete = false;
+    }
   };
 
   const storeStashedItem = (state: IStashedItem[]) => {
@@ -83,30 +92,7 @@
   <input type="text" bind:value={text} />
 </form> -->
 
-<h3 class="title">Always pop stash?</h3>
-<div class="radioContainer">
-  <div>
-    <input
-      type="radio"
-      bind:group={popState}
-      value={1}
-      on:click={() => popState = 1}
-      class="radioContainer_button"
-    /><slot>Yes</slot>
-  </div>
-  <div>
-    <input
-      type="radio"
-      bind:group={popState}
-      value={0}
-      on:click={() => popState = 0}
-      class="radioContainer_button"
-    />
-    <slot>No</slot>
-  </div>
-</div>
-
-<h3 class="title">Stashed items:</h3>
+<h3 class="title">Stashed tabs:</h3>
 <ul>
   {#each state as item, index (index)}
     <li class="stashedItem" on:click={() => handleClick(item)}>
@@ -123,11 +109,39 @@
       </div>
     </li>
   {:else}
-    <p class={"status"}>No stashed tab groups..</p>
+    <p class={"status"}>You have no stashed tabs..</p>
   {/each}
 </ul>
 
-<button on:click={clear}>Clear</button>
+<button
+  class={confirmDelete ? "confirmDeleteColor" : ""}
+  on:click={toggleConfirmOrDelete}
+>
+  {confirmDelete ? "Are you sure?" : "Delete all stash"}
+</button>
+
+<h3 class="title">Always pop stash?</h3>
+<div class="radioContainer">
+  <div>
+    <input
+      type="radio"
+      bind:group={popState}
+      value={1}
+      on:click={() => (popState = 1)}
+      class="radioContainer_button"
+    /><slot>Yes</slot>
+  </div>
+  <div>
+    <input
+      type="radio"
+      bind:group={popState}
+      value={0}
+      on:click={() => (popState = 0)}
+      class="radioContainer_button"
+    />
+    <slot>No</slot>
+  </div>
+</div>
 
 <!-- <button
     on:click={() => {
@@ -161,6 +175,11 @@
     width: fit-content;
   }
 
+  .confirmDeleteColor {
+    background-color: red;
+    color: white;
+  }
+
   .deleteContainer {
     width: fit-content;
     cursor: pointer;
@@ -175,6 +194,7 @@
     border: 1px solid lightslategray;
     background-color: #d9dbf1;
     color: black;
+    cursor: pointer;
   }
   .stashedItem_container {
     display: flex;
