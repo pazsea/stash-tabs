@@ -6,7 +6,6 @@ Enter stash-tabs! With this VScode extension you can save which files/tabs you'v
 ![stash-tabs](https://user-images.githubusercontent.com/43534461/113587055-922cbe80-962e-11eb-8fea-634dd343828b.gif)
 
 
-
 ## What’s In This Document
 
 - [Key functions](#-key-functions)
@@ -43,10 +42,12 @@ yarn watch
 ```
 press F5 in VSCode
 ```
- 
-## Todo ✓
+
+
+## ✓ Todo 
 - [ ] Persist state in database?
 - [ ] Add github auth
+
 
 ## 📓 Authors
 Patrick Sjöberg <a href="https://github.com/pazsea">@pazsea</a> <br>
