@@ -2,13 +2,16 @@
 
 I often need to switch to another set of tabs when coding. When I want to return to what I was doing before, I often need to look up those exact sets of files and the order I wanted them in. I often forget some files.
 Enter stash-tabs! With this VScode extension you can save which files/tabs you've been working with and open them later. 
+
 ![stash-tabs](https://user-images.githubusercontent.com/43534461/113587055-922cbe80-962e-11eb-8fea-634dd343828b.gif)
+
+
 
 ## What’s In This Document
 
 - [Key functions](#-key-functions)
 - [How to run this project](#-how-to-run-this-project)
-- [Attributes](#-attributes)
+- [Todo](#-todo)
 - [Authors](#-authors)
 
 
@@ -25,23 +28,25 @@ Enter stash-tabs! With this VScode extension you can save which files/tabs you'v
 ## 💻 How to run this project
 1. **Install from the root folder**
 
-   ```shell
-   yarn install
-
-   ```
+```
+yarn install
+```
 
 2. **Start project in watch mode**
 
-   ```sh
-   yarn watch
-   ```
- 
- 3. **Start live debugging**
+```
+yarn watch
+```
 
-   ```sh
-   press F5 in VSCode
-   ```
+3. **Start live debugging**
+
+```
+press F5 in VSCode
+```
  
+## Todo ✓
+- [ ] Persist state in database?
+- [ ] Add github auth
 
 ## 📓 Authors
 Patrick Sjöberg <a href="https://github.com/pazsea">@pazsea</a> <br>
