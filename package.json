@@ -1,6 +1,7 @@
 {
   "name": "stash-tabs",
   "displayName": "stash-tabs",
+  "publisher": "paz",
   "description": "Stash open tabs locally",
   "version": "0.0.1",
   "engines": {
