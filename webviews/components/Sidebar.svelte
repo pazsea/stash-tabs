@@ -16,6 +16,7 @@
     ? Number(JSON.parse(localStorage.getItem(popStashKey) as string))
     : 0;
   let confirmDelete = false;
+  let inputValue = "";
   $: storePopState(popState);
 
   onMount(() => {
@@ -78,19 +79,19 @@
     if (popState === 1) removeStashedItem(item);
     tsvscode.postMessage({ type: "onOpenTabs", value: item });
   };
+
+  const handleConfirmedInput = (e: Event) => {
+    if (!inputValue) return;
+    e.preventDefault();
+    tsvscode.postMessage({ type: "onAddStash", value: inputValue });
+    inputValue = "";
+  };
 </script>
 
-<!-- 
-  TODO: Have input for open tabs
-  <form
-  on:submit|preventDefault={(e) => {
-    if (!text) return;
-    state = [{ name: text, tabPaths: [] }, ...state];
-    text = "";
-  }}
->
-  <input type="text" bind:value={text} />
-</form> -->
+<h3 class="title">Enter stash name:</h3>
+<form on:submit|preventDefault={(e) => handleConfirmedInput(e)}>
+  <input type="text" bind:value={inputValue} />
+</form>
 
 <h3 class="title">Stashed tabs:</h3>
 <ul>
@@ -113,12 +114,7 @@
   {/each}
 </ul>
 
-<button
-  class={confirmDelete ? "confirmDeleteColor" : ""}
-  on:click={toggleConfirmOrDelete}
->
-  {confirmDelete ? "Are you sure?" : "Delete all stash"}
-</button>
+<hr />
 
 <h3 class="title">Always pop stash?</h3>
 <div class="radioContainer">
@@ -143,10 +139,13 @@
   </div>
 </div>
 
-<!-- <button
-    on:click={() => {
-        tsvscode.addTabs({ type: 'onError', value: 'ERROR MESSAGE' });
-    }}>Click me for error</button> -->
+<button
+  class={confirmDelete ? "confirmDeleteColor" : ""}
+  on:click={toggleConfirmOrDelete}
+>
+  {confirmDelete ? "Are you sure?" : "Delete all stash"}
+</button>
+
 <style>
   ul {
     list-style: none;

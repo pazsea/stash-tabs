@@ -38,6 +38,13 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
           vscode.window.showErrorMessage(data.value);
           break;
         }
+        case "onAddStash": {
+          if (!data.value) {
+            return;
+          }
+          vscode.commands.executeCommand("stash-tabs.add", data.value)
+          break;
+        }
       }
     });
   }

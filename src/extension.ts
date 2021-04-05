@@ -21,7 +21,7 @@ export function activate(context: vscode.ExtensionContext) {
   );
 
   context.subscriptions.push(
-    vscode.commands.registerCommand("stash-tabs.add", async () => {
+    vscode.commands.registerCommand("stash-tabs.add", async (inputValue?: string) => {
       const { activeTextEditor } = vscode.window;
 
       if (!activeTextEditor) {
@@ -29,7 +29,7 @@ export function activate(context: vscode.ExtensionContext) {
         return;
       }
 
-      const nameInput = await vscode.window.showInputBox();
+      const nameInput = inputValue || await vscode.window.showInputBox();
       const closeQuestion = await vscode.window.showInformationMessage("Want to close tabs after stashing?", "Yes", "No");
 
       const paths = vscode.workspace.textDocuments.map(
