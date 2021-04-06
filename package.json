@@ -1,9 +1,13 @@
 {
   "name": "stash-tabs",
-  "displayName": "stash-tabs",
+  "displayName": "Stash tabs",
   "publisher": "paz1987",
-  "description": "Stash open tabs locally",
-  "version": "0.0.1",
+  "description": "Stash away your open editors and open them at a later date. Cannot be easier than this...",
+  "version": "0.0.5",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/pazsea/stash-tabs.git"
+  },
   "engines": {
     "vscode": "^1.52.0"
   },
