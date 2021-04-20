@@ -2,7 +2,8 @@
   "name": "stash-tabs",
   "displayName": "Stash tabs",
   "publisher": "paz1987",
-  "description": "Stash away your open editors and open them at a later date. Cannot be easier than this...",
+  "description": "Stash away your open text documents and open them at a later date. Simple...",
+  "icon": "images/logo.png",
   "version": "0.0.5",
   "repository": {
     "type": "git",
