@@ -143,7 +143,7 @@
   class={confirmDelete ? "confirmDeleteColor" : ""}
   on:click={toggleConfirmOrDelete}
 >
-  {confirmDelete ? "Are you sure?" : "Delete all stash"}
+  {confirmDelete ? "Nuke all? Click again!💣" : "Delete all stash"}
 </button>
 
 <style>

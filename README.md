@@ -14,6 +14,7 @@ An extension that will stash open tabs so you can open them later. Simple.
 ## ✓ Todo 
 - [ ] Persist state in database?
 - [ ] Add github auth
+- [ ] Feature: Add button to close tabs older than certain date
 
 
 ## 📓 Authors
