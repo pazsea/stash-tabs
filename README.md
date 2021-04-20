@@ -1,5 +1,4 @@
-I often need to switch to another set of tabs when coding. When I want to return to what I was doing before, I often need to look up those exact sets of files and the order I wanted them in. I often forget some files.
-Enter stash-tabs! With this VScode extension you can save which files/tabs you've been working with and open them later. 
+An extension that will stash open tabs so you can open them later. Simple.
 
 ![stash-tabs](https://user-images.githubusercontent.com/43534461/113587055-922cbe80-962e-11eb-8fea-634dd343828b.gif)
 
