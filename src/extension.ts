@@ -14,7 +14,12 @@ export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(
     vscode.window.registerWebviewViewProvider(
       "stash-tabs-sidebar",
-      sidebarProvider
+      sidebarProvider,
+      {
+        webviewOptions: {
+          retainContextWhenHidden: true,
+        },
+      }
     )
   );
 
@@ -30,7 +35,11 @@ export function activate(context: vscode.ExtensionContext) {
         }
 
         const nameInput = inputValue || (await vscode.window.showInputBox());
-        const closeQuestion = await vscode.window.showInformationMessage("Want to close tabs after stashing?", "Yes", "No");
+        const closeQuestion = await vscode.window.showInformationMessage(
+          "Want to close tabs after stashing?",
+          "Yes",
+          "No"
+        );
 
         const paths = vscode.workspace.textDocuments.map((doc) => {
           if (doc?.uri?.scheme !== "file") {
