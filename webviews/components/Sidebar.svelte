@@ -6,18 +6,11 @@
     name: string;
     tabPaths: string[];
   }
-  const storageKey = "stashedItems";
-  const popStashKey = "popState";
 
-  let state: IStashedItem[] = localStorage.getItem(storageKey)
-    ? JSON.parse(localStorage.getItem(storageKey) as string)
-    : [];
-  let popState = localStorage.getItem(popStashKey)
-    ? Number(JSON.parse(localStorage.getItem(popStashKey) as string))
-    : 0;
+  let state: IStashedItem[] = [];
+  let popState = 0;
   let confirmDelete = false;
   let inputValue = "";
-  $: storePopState(popState);
 
   onMount(() => {
     window.addEventListener("message", (event) => {
@@ -29,7 +22,6 @@
             { name: name, tabPaths: tabPaths, id: uniqueID() },
             ...state,
           ];
-          storeStashedItem(state);
           break;
       }
     });
@@ -38,8 +30,6 @@
   const removeStashedItem = (item: IStashedItem, e?: MouseEvent) => {
     if (e) e.stopPropagation();
     state = state.filter((i) => i.id !== item.id);
-    if (!state) return localStorage.removeItem(storageKey);
-    localStorage.setItem(storageKey, JSON.stringify(state));
   };
 
   // TODO: Replace with real uuid when launch.
@@ -59,19 +49,8 @@
       confirmDelete = true;
     } else {
       state = [];
-      if (localStorage.getItem(storageKey)) localStorage.removeItem(storageKey);
-      if (localStorage.getItem(popStashKey))
-        localStorage.removeItem(popStashKey);
       confirmDelete = false;
     }
-  };
-
-  const storeStashedItem = (state: IStashedItem[]) => {
-    localStorage.setItem(storageKey, JSON.stringify(state));
-  };
-
-  const storePopState = (key: number) => {
-    localStorage.setItem(popStashKey, JSON.stringify(key));
   };
 
   const handleClick = (item: IStashedItem) => {
