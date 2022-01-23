@@ -4,7 +4,7 @@
   "publisher": "paz1987",
   "description": "Stash away your open text documents and open them at a later date. Simple...",
   "icon": "images/logo.png",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "repository": {
     "type": "git",
     "url": "git://github.com/pazsea/stash-tabs.git"
